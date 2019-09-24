@@ -1,0 +1,124 @@
+@import "../styles/variables.scss";
+
+.notes-list {
+  .note-item {
+    padding: 8px 10px;
+    background: #f1f1f1;
+    border-radius: 0;
+    height: auto;
+    overflow: initial;
+    font-size: initial;
+
+    &:hover {
+      background: #ccc;
+      cursor: pointer;
+      .inner {
+        text-decoration: none;
+      }
+    }
+    .inner {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+
+      .left {
+        display: flex;
+        align-items: center;
+      }
+      .right {
+        span {
+          font-size: 11px;
+          color: #999;
+        }
+      }
+      svg {
+        color: #999;
+        margin-right: 8px;
+      }
+    }
+    &.resolved {
+      svg {
+        color: aqua;
+      }
+    }
+    &.progress {
+      svg {
+      }
+    }
+  }
+}
+
+.task-detail-wrap {
+  .task-header {
+    .task-header-inner {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px;
+
+      .task-assignees {
+        display: flex;
+        align-items: center;
+
+        div {
+          &:first-child {
+            span {
+              border-radius: 50%;
+              width: 30px;
+              height: 30px;
+              background: #000;
+              display: block;
+            }
+          }
+          + div {
+            padding-left: 10px;
+            span {
+              display: block;
+              text-align: left;
+              font-size: 11px;
+
+              &:first-child {
+                color: #999;
+              }
+              + span {
+                padding-top: 5px;
+              }
+            }
+          }
+        }
+      }
+      .task-date {
+        display: flex;
+        align-items: center;
+
+        h3 {
+          padding: 0 10px;
+        }
+        svg {
+          font-size: 30px;
+          padding: 7px;
+          border-radius: 50%;
+          border: 1px solid $color-black;
+        }
+        div {
+          padding-left: 10px;
+        }
+        span {
+          display: flex;
+          align-items: center;
+
+          &:first-child {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    h3 {
+      padding: 0 10px;
+    }
+  }
+  .task-description {
+    padding: 0 10px;
+  }
+}

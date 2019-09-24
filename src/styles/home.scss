@@ -1,0 +1,135 @@
+.filter-header {
+  padding: 5px 10px;
+  .inner {
+    display: flex;
+    justify-content: space-between;
+
+    .left {
+      display: flex;
+      span {
+        display: block;
+
+        &:hover {
+          cursor: pointer;
+        }
+        &.active {
+          border-bottom: 1px solid #000;
+        }
+        + span {
+          margin-left: 10px;
+        }
+      }
+    }
+    .right {
+      svg {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.home-projects-list {
+  display: flex;
+  width: 100%;
+  flex-flow: column;
+  .item {
+    display: flex;
+    padding: 8px 5px;
+    border-bottom: 1px solid #cccccc52;
+
+    .preview-icon {
+      span {
+        background: #cccccc52;
+        padding: 7px;
+        border-radius: 5px;
+        align-items: center;
+        svg {
+          font-size: 20px;
+        }
+      }
+      + .preview-content {
+        padding-left: 10px;
+      }
+    }
+    .preview-content {
+      h5 {
+        font-size: 12px;
+        margin-bottom: 0;
+
+        + p {
+          padding-top: 3px;
+        }
+      }
+      p {
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+.grid-view {
+  .home-projects-list {
+    display: flex;
+    align-items: center;
+    flex-flow: row wrap;
+
+    .item {
+      display: block;
+      border-bottom: none;
+      width: 50%;
+
+      .preview-icon {
+        span {
+          padding: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          max-width: 60px;
+          height: 60px;
+          margin: 0 auto;
+          svg {
+            font-size: 30px;
+          }
+        }
+        + .preview-content {
+          padding-top: 6px;
+          padding-left: 0;
+        }
+      }
+      .preview-content {
+        text-align: center;
+      }
+    }
+  }
+}
+
+@media (min-width: 576px) {
+  .grid-view {
+    .home-projects-list {
+      .item {
+        width: 50%;
+      }
+    }
+  }
+}
+@media (min-width: 768px) {
+  .grid-view {
+    .home-projects-list {
+      .item {
+        width: 33%;
+      }
+    }
+  }
+}
+@media (min-width: 1024px) {
+  .grid-view {
+    .home-projects-list {
+      .item {
+        width: 25%;
+      }
+    }
+  }
+}
