@@ -3,6 +3,7 @@ import Header from "../components/main-header";
 import Footer from "../components/main-footer";
 import { AccountFormFields } from "../components/forms";
 import { UserFormFields } from "../components/forms";
+import { Preloader } from "../components/preloader-container";
 import BootBox from "react-bootbox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -99,71 +100,86 @@ export class Home extends Component {
         />
         <main className={`app-body ${this.state.viewType}-view`}>
           <div className="app-body-inner">
-            <div className="filter-header">
-              <div className="inner">
-                <div className="left">
-                  <span
-                    onClick={() => this.toggleHomeTabs("all")}
-                    className={
-                      this.state.activeHomeTab === "all" ? "active" : null
-                    }
-                  >
-                    All
-                  </span>
-                  <span
-                    onClick={() => this.toggleHomeTabs("favorites")}
-                    className={
-                      this.state.activeHomeTab === "favorites" ? "active" : null
-                    }
-                  >
-                    Favorites
-                  </span>
-                  <span
-                    onClick={() => this.toggleHomeTabs("recents")}
-                    className={
-                      this.state.activeHomeTab === "recents" ? "active" : null
-                    }
-                  >
-                    Recents
-                  </span>
-                </div>
-                <div className="right">
-                  <FontAwesomeIcon
-                    onClick={() => this.toggleViewType()}
-                    icon={this.state.viewType === "list" ? "table" : "list-ul"}
-                  />
+            <Preloader
+              isLoading={this.props.appData && this.props.appData.isLoading}
+            />
+            <div
+              className={
+                this.props.appData && this.props.appData.isLoading
+                  ? "hide"
+                  : null
+              }
+            >
+              <div className="filter-header">
+                <div className="inner">
+                  <div className="left">
+                    <span
+                      onClick={() => this.toggleHomeTabs("all")}
+                      className={
+                        this.state.activeHomeTab === "all" ? "active" : null
+                      }
+                    >
+                      All
+                    </span>
+                    <span
+                      onClick={() => this.toggleHomeTabs("favorites")}
+                      className={
+                        this.state.activeHomeTab === "favorites"
+                          ? "active"
+                          : null
+                      }
+                    >
+                      Favorites
+                    </span>
+                    <span
+                      onClick={() => this.toggleHomeTabs("recents")}
+                      className={
+                        this.state.activeHomeTab === "recents" ? "active" : null
+                      }
+                    >
+                      Recents
+                    </span>
+                  </div>
+                  <div className="right">
+                    <FontAwesomeIcon
+                      onClick={() => this.toggleViewType()}
+                      icon={
+                        this.state.viewType === "list" ? "table" : "list-ul"
+                      }
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <TabContent activeTab={this.state.activeHomeTab}>
-              <TabPane tabId="all">
-                <div className="home-projects-list">
-                  {this.state.projects &&
-                    this.state.projects.map((project, index) => (
-                      <div
-                        key={index}
-                        className="item"
-                        onClick={() =>
-                          this.navigateToUsersPage(`/project/${project.id}`)
-                        }
-                      >
-                        <div className="preview-icon">
-                          <span>
-                            <FontAwesomeIcon icon="briefcase" />
-                          </span>
+              <TabContent activeTab={this.state.activeHomeTab}>
+                <TabPane tabId="all">
+                  <div className="home-projects-list">
+                    {this.state.projects &&
+                      this.state.projects.map((project, index) => (
+                        <div
+                          key={index}
+                          className="item"
+                          onClick={() =>
+                            this.navigateToUsersPage(`/project/${project.id}`)
+                          }
+                        >
+                          <div className="preview-icon">
+                            <span>
+                              <FontAwesomeIcon icon="briefcase" />
+                            </span>
+                          </div>
+                          <div className="preview-content">
+                            <h5>{project.title.rendered}</h5>
+                            <p>2 members</p>
+                          </div>
                         </div>
-                        <div className="preview-content">
-                          <h5>{project.title.rendered}</h5>
-                          <p>2 members</p>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </TabPane>
-              <TabPane tabId="favorites"></TabPane>
-              <TabPane tabId="recent"></TabPane>
-            </TabContent>
+                      ))}
+                  </div>
+                </TabPane>
+                <TabPane tabId="favorites"></TabPane>
+                <TabPane tabId="recent"></TabPane>
+              </TabContent>
+            </div>
           </div>
         </main>
 

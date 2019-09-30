@@ -2,6 +2,7 @@ import React, { Component, Fragment, useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Header, { getHeaderType } from "../components/main-header";
 import Footer from "../components/main-footer";
+import { Preloader } from "../components/preloader-container";
 class Inbox extends Component {
   state = {
     actionModalIsOpen: true,
@@ -53,7 +54,11 @@ class Inbox extends Component {
           theHeader={getHeaderType("inbox", this.state.headerData)}
         />
         <main className="app-body">
-          <div className="app-body-inner"></div>
+          <div className="app-body-inner">
+            <Preloader
+              isLoading={this.props.appData && this.props.appData.isLoading}
+            />
+          </div>
         </main>
         <Footer
           urlParam={this.props.match && this.props.match}

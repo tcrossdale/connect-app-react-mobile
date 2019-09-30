@@ -779,22 +779,8 @@ export const UserFormFields = props => {
   );
 };
 
-export const ProjectFormFields = props => {
-  let initForm = props.theForm ? { ...props.theForm } : null;
-
-  const [theCurrForm, setTheCurrForm] = useState({ ...initForm });
-
+export const ProjectFormFieldsOld = props => {
   const [formTitleError, setFormTitleError] = useState("");
-
-  const onInputChange = (evt, currForm) => {
-    let fieldKey = evt.currentTarget.getAttribute("name");
-    let fieldValue = evt.currentTarget.value;
-    let currentForm = { ...currForm };
-    let theFieldArray = [fieldValue];
-
-    currentForm[fieldKey] = fieldValue;
-    setTheCurrForm(currentForm);
-  };
 
   const updateFunction = form => {
     props.updateAppItem(form);
@@ -803,9 +789,31 @@ export const ProjectFormFields = props => {
     props.createAppItem(form);
   };
 
+  const onInputChange = evt => {
+    let fieldKey = evt.currentTarget.getAttribute("name");
+    let fieldValue = evt.currentTarget.value;
+    let currentForm = { ...initForm };
+    let theFieldArray = [fieldValue];
+
+    console.log("fieldKey - ", fieldKey);
+    switch (fieldKey) {
+      case "domain_provider":
+      case "hosting_provider":
+        currentForm[fieldKey] = theFieldArray;
+        break;
+      default:
+        currentForm[fieldKey] = fieldValue;
+        break;
+    }
+    initForm = { ...currentForm };
+    // setTheCurrForm(currentForm);
+    console.log("initForm - ", initForm);
+    // console.log("theCurrForm - ", theCurrForm);
+  };
+
   let theFinalFunc = null;
   let submitButtonLabel = "Update";
-  if (initForm) {
+  if (props.theForm) {
     theFinalFunc = updateFunction;
   } else {
     theFinalFunc = createFunction;
@@ -815,9 +823,10 @@ export const ProjectFormFields = props => {
   return (
     <Fragment>
       {props.title ? <h4>{props.title}</h4> : null}
+
       <Form
         onSubmit={e => {
-          submitForm(theCurrForm);
+          submitForm(props.theForm);
         }}
       >
         <FormGroup>
@@ -827,10 +836,12 @@ export const ProjectFormFields = props => {
             type="text"
             className={formTitleError ? "form-control error" : "form-control"}
             placeholder="Title"
-            onChange={e => onInputChange(e, theCurrForm)}
+            onChange={e => props.onInputChange(e)}
             value={
-              theCurrForm && theCurrForm.title && theCurrForm.title.rendered
-                ? theCurrForm.title.rendered
+              props.theForm &&
+              props.theForm.title &&
+              props.theForm.title.rendered
+                ? props.theForm.title.rendered
                 : ""
             }
             invalid={formTitleError == true}
@@ -844,14 +855,18 @@ export const ProjectFormFields = props => {
             type="select"
             className="form-control"
             placeholder="Project Client"
-            onChange={e => onInputChange(e, theCurrForm)}
+            onChange={e => props.onInputChange(e)}
             value={
-              theCurrForm && theCurrForm.clientid ? theCurrForm.clientid : false
+              props.theForm && props.theForm.clientid
+                ? props.theForm.clientid
+                : false
             }
           >
             <FormUserOptions
-              users={props.users}
-              matchid={theCurrForm && theCurrForm.id ? theCurrForm.id : null}
+              users={props.appData.users}
+              matchid={
+                props.theForm && props.theForm.id ? props.theForm.id : null
+              }
             />
           </Input>
         </FormGroup>
@@ -861,10 +876,12 @@ export const ProjectFormFields = props => {
             name="content"
             className="form-control"
             placeholder="Description"
-            onChange={e => onInputChange(e, theCurrForm)}
+            onChange={e => props.onInputChange(e)}
             value={
-              theCurrForm && theCurrForm.content && theCurrForm.content.rendered
-                ? theCurrForm.content.rendered
+              props.theForm &&
+              props.theForm.content &&
+              props.theForm.content.rendered
+                ? props.theForm.content.rendered
                 : ""
             }
           />
@@ -876,10 +893,10 @@ export const ProjectFormFields = props => {
             type="date"
             className="form-control"
             placeholder="Due Date"
-            onChange={e => onInputChange(e, theCurrForm)}
+            onChange={e => props.onInputChange(e)}
             value={
-              theCurrForm && theCurrForm.due_date
-                ? theCurrForm.due_date
+              props.theForm && props.theForm.due_date
+                ? props.theForm.due_date
                 : "2000-07-18"
             }
           />
@@ -891,10 +908,10 @@ export const ProjectFormFields = props => {
             type="date"
             className="form-control"
             placeholder="Launch Date"
-            onChange={e => onInputChange(e, theCurrForm)}
+            onChange={e => props.onInputChange(e)}
             value={
-              theCurrForm && theCurrForm.launch
-                ? theCurrForm.launch
+              props.theForm && props.theForm.launch
+                ? props.theForm.launch
                 : "2000-07-18"
             }
           />
@@ -905,9 +922,11 @@ export const ProjectFormFields = props => {
             type="number"
             className="form-control"
             placeholder="Progress"
-            onChange={e => onInputChange(e, theCurrForm)}
+            onChange={e => props.onInputChange(e)}
             value={
-              theCurrForm && theCurrForm.progress ? theCurrForm.progress : 0
+              props.theForm && props.theForm.progress
+                ? props.theForm.progress
+                : 0
             }
           />
         </FormGroup>
@@ -918,12 +937,12 @@ export const ProjectFormFields = props => {
             type="select"
             className="form-control"
             placeholder="Status"
-            onChange={e => onInputChange(e, theCurrForm)}
+            onChange={e => props.onInputChange(e)}
             value={
-              theCurrForm &&
-              theCurrForm.project_status &&
-              theCurrForm.project_status[0]
-                ? theCurrForm.project_status[0]
+              props.theForm &&
+              props.theForm.project_status &&
+              props.theForm.project_status[0]
+                ? props.theForm.project_status[0]
                 : ""
             }
           >
@@ -935,5 +954,139 @@ export const ProjectFormFields = props => {
         </FormGroup>
       </Form>
     </Fragment>
+  );
+};
+
+export const ProjectFormFields = props => {
+  return (
+    <Form
+      onSubmit={e => {
+        props.submitForm(props.activeUpdateProject);
+      }}
+    >
+      <FormGroup>
+        <Input
+          name="title"
+          id="title"
+          type="text"
+          placeholder="Title"
+          onChange={e => props.onInputChange(e)}
+          value={
+            props.activeUpdateProject &&
+            props.activeUpdateProject.title &&
+            props.activeUpdateProject.title.rendered
+              ? props.activeUpdateProject.title.rendered
+              : ""
+          }
+          required
+        />
+        <FormText>Enter a title for this project</FormText>
+      </FormGroup>
+      <FormGroup>
+        <Input
+          name="clientid"
+          type="select"
+          className="form-control"
+          placeholder="Project Client"
+          onChange={e => props.onInputChange(e)}
+          value={
+            props.activeUpdateProject && props.activeUpdateProject.clientid
+              ? props.activeUpdateProject.clientid
+              : false
+          }
+        >
+          <FormUserOptions
+            users={props.appData && props.appData.users}
+            matchid={
+              props.activeUpdateProject && props.activeUpdateProject.id
+                ? props.activeUpdateProject.id
+                : null
+            }
+          />
+        </Input>
+      </FormGroup>
+      <FormGroup>
+        <Input
+          type="textarea"
+          name="content"
+          className="form-control"
+          placeholder="Description"
+          onChange={e => props.onInputChange(e)}
+          value={
+            props.activeUpdateProject &&
+            props.activeUpdateProject.content &&
+            props.activeUpdateProject.content.rendered
+              ? props.activeUpdateProject.content.rendered
+              : ""
+          }
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label className="control-label">Due Date</Label>
+        <Input
+          name="due_date"
+          type="date"
+          className="form-control"
+          placeholder="Due Date"
+          onChange={e => props.onInputChange(e)}
+          value={
+            props.activeUpdateProject && props.activeUpdateProject.due_date
+              ? props.activeUpdateProject.due_date
+              : "2000-07-18"
+          }
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label className="control-label">Launch Date</Label>
+        <Input
+          name="launch"
+          type="date"
+          className="form-control"
+          placeholder="Launch Date"
+          onChange={e => props.onInputChange(e)}
+          value={
+            props.activeUpdateProject && props.activeUpdateProject.launch
+              ? props.activeUpdateProject.launch
+              : "2000-07-18"
+          }
+        />
+      </FormGroup>
+      <FormGroup>
+        <Input
+          name="progress"
+          type="number"
+          className="form-control"
+          placeholder="Progress"
+          onChange={e => props.onInputChange(e)}
+          value={
+            props.activeUpdateProject && props.activeUpdateProject.progress
+              ? props.activeUpdateProject.progress
+              : 0
+          }
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label className="control-label">Status</Label>
+        <Input
+          name="project_status"
+          type="select"
+          className="form-control"
+          placeholder="Status"
+          onChange={e => props.onInputChange(e)}
+          value={
+            props.activeUpdateProject &&
+            props.activeUpdateProject.project_status &&
+            props.activeUpdateProject.project_status[0]
+              ? props.activeUpdateProject.project_status[0]
+              : ""
+          }
+        >
+          <option value="open">Open</option>
+          <option value="progress">In Progress</option>
+          <option value="closed">Closed</option>
+          <option value="archived">Archived</option>
+        </Input>
+      </FormGroup>
+    </Form>
   );
 };

@@ -20,6 +20,7 @@ import Inbox from "./containers/Inbox";
 import { Projects, ProjectDetail } from "./containers/Projects";
 import { Home } from "./containers/Home";
 import Users from "./containers/Users";
+import Profile from "./containers/Profile";
 import Accounts from "./containers/Accounts";
 import { Notes } from "./containers/Notes";
 import MainFooter from "./components/main-footer";
@@ -97,17 +98,12 @@ class App extends Component {
       : [],
     viewChange: "list-view",
     showLogoutConfirmbox: false,
-    activeProjectDetailTab: "list-view",
+    activeProjectDetailTab: "overview",
     currentUser:
       this.props && this.props.appData && this.props.appData.currentUser
         ? this.props.appData.currentUser
-        : null
-  };
-
-  setappRouteContent = theContext => {
-    this.setappRouteContent(theContext).then(response => {
-      console.log("The Updated Content", response);
-    });
+        : null,
+    historyContext: null
   };
 
   setInitCachedAppDataMotion = (newState, theHistory) => {
@@ -153,7 +149,6 @@ class App extends Component {
   };
 
   toggleAccountEditModal = accountItem => {
-    console.log("Edit Item - ", accountItem);
     this.setState({
       accountsEditModalIsOpen: true
     });
@@ -222,6 +217,12 @@ class App extends Component {
     });
   };
 
+  changeProjectDetailView = viewChange => {
+    this.setState({
+      activeProjectDetailTab: viewChange
+    });
+  };
+
   getFilterListType = theFilterTypeView => {
     let tempFilterList = this.state && this.state.tasks ? this.state.tasks : [];
 
@@ -248,7 +249,7 @@ class App extends Component {
 
   confirmLogout = () => {
     this.props.logoutUser(this.state).then(function() {
-      window.location.href = "/";
+      window.location.pathname = "/";
     });
   };
 
@@ -271,7 +272,6 @@ class App extends Component {
 
   updateAppItem = (thePost, featureType) => {
     let newPost = { ...thePost };
-    console.log("this.props.currentUser - ", this.props);
     updatePost(this.props.appData.currentUser, newPost, featureType).then(
       response => {
         this.props.updateAppDataContent(
@@ -286,6 +286,18 @@ class App extends Component {
   createAppItem = (theItem, featureType) => {
     let newPost = { ...theItem };
     createPost(this.state.currentUser, newPost, featureType).then(response => {
+      let theAppData = { ...this.props.appData };
+      let listsOfPosts = [...theAppData[featureType]];
+      listsOfPosts.push(response);
+      theAppData[featureType] = [...listsOfPosts];
+
+      this.props.updateAppDataContent(featureType, response, theAppData);
+    });
+  };
+
+  deleteAppItem = (theItem, featureType) => {
+    let newPost = { ...theItem };
+    deletePost(this.state.currentUser, newPost, featureType).then(response => {
       let theAppData = { ...this.props.appData };
       let listsOfPosts = [...theAppData[featureType]];
       listsOfPosts.push(response);
@@ -317,17 +329,22 @@ class App extends Component {
     }
   };
 
+  goToPage = theURL => {
+    window.location.pathname = theURL;
+  };
+
   componentWillMount = () => {
     this.props.userStallCheck(this.state);
   };
 
   componentDidMount = () => {
     this.props.setAppRouteMountCachedAppData();
+    this.props.isLoggedInCheck();
   };
 
   componentDidUpdate() {
     this.props.setRouteTimeStamp();
-    console.log("APp Update");
+    console.log("APP Update");
     fetchUsersProfiles(
       this.props && this.props.appData && this.props.appData.users
     );
@@ -375,6 +392,7 @@ class App extends Component {
             toggleMainModal={this.toggleMainModal}
             navigateToUsersPage={this.navigateToUsersPage}
             askToLogout={this.askToLogout}
+            goToPage={this.goToPage}
           />
           <ActionModal
             actionModalIsOpen={this.state && this.state.actionModalIsOpen}
@@ -524,6 +542,7 @@ class App extends Component {
                 toggleMainModal={this.toggleMainModal}
                 navigateToUsersPage={this.navigateToUsersPage}
                 deleteItemBootbox={this.deleteItemBootbox}
+                updateAppItem={this.updateAppItem}
               />
             )}
           />
@@ -546,11 +565,46 @@ class App extends Component {
                 filterType={this.state && this.state.filterType}
                 filterTypeView={this.state && this.state.filterTypeView}
                 changeFilterType={this.changeFilterType}
-                changeTheView={this.changeTheView}
                 toggleActionModal={this.toggleActionModal}
                 toggleMainModal={this.toggleMainModal}
                 navigateToUsersPage={this.navigateToUsersPage}
                 deleteItemBootbox={this.deleteItemBootbox}
+                activeProjectDetailTab={this.state.activeProjectDetailTab}
+                changeProjectDetailView={this.changeProjectDetailView}
+              />
+            )}
+          />
+          <Route
+            path="/profile"
+            exact
+            component={({ history, match }) => (
+              <Profile
+                appData={this.props.appData}
+                isLoggedIn={this.isLoggedIn}
+                logoutUser={this.logoutUser}
+                history={history}
+                match={match}
+                actionModalIsOpen={this.state && this.state.actionModalIsOpen}
+                mainModalIsOpen={this.state && this.state.mainModalIsOpen}
+                deleteItemBootboxIsOpen={
+                  this.state && this.state.deleteItemBootboxIsOpen
+                }
+                viewChange={this.state && this.state.viewChange}
+                filterType={this.state && this.state.filterType}
+                filterTypeView={this.state && this.state.filterTypeView}
+                changeFilterType={this.changeFilterType}
+                changeAccountView={this.changeAccountView}
+                toggleActionModal={this.toggleActionModal}
+                toggleMainModal={this.toggleMainModal}
+                toggleAccountEditModal={this.toggleAccountEditModal}
+                accountsFilterList={this.state && this.state.accountsFilterList}
+                accountsFilterTypeView={this.state.accountsFilterTypeView}
+                accountsEditModalIsOpen={this.state.accountsEditModalIsOpen}
+                accountEditItem={this.state.accountEditItem}
+                navigateToUsersPage={this.navigateToUsersPage}
+                deleteItemBootbox={this.deleteItemBootbox}
+                updateAppItem={this.updateAppItem}
+                goToPage={this.goToPage}
               />
             )}
           />

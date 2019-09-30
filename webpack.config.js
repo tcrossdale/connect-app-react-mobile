@@ -1,6 +1,12 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+
+const copyPlugin = new CopyPlugin([
+  { from: "./manifest.json", to: "" },
+  { from: "./src/assets/images", to: "assets/images" }
+]);
 
 const htmlPlugin = new HtmlWebPackPlugin({
   template: "./src/index.html",
@@ -12,7 +18,7 @@ module.exports = {
   entry: ["babel-polyfill", "./src/index.js"],
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
+    filename: "app.js",
     publicPath: "/"
   },
   devServer: {
@@ -39,5 +45,5 @@ module.exports = {
       }
     ]
   },
-  plugins: [htmlPlugin]
+  plugins: [htmlPlugin, copyPlugin]
 };

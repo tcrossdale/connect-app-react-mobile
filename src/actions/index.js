@@ -1,10 +1,11 @@
 import fetch from "cross-fetch";
 import axios from "axios";
 
-export const theAuthUrl = "http://connect:8888/wp-json/jwt-auth/v1/token/";
-export const theAPIUrl = "http://connect:8888/wp-json/wp/v2/";
-// export const theAuthUrl = "http://mobile.crossdaletechsolutions.com/mobile/wp-json/jwt-auth/v1/token/";
-// export const theAPIUrl = "http://mobile.crossdaletechsolutions.com/mobile/wp-json/wp/v1/";
+// export const theAuthUrl = "http://connect:8888/wp-json/jwt-auth/v1/token/";
+// export const theAPIUrl = "http://connect:8888/wp-json/wp/v2/";
+export const theAuthUrl =
+  "http://api.crossdaletechsolutions.com/wp-json/jwt-auth/v1/token/";
+export const theAPIUrl = "http://api.crossdaletechsolutions.com/wp-json/wp/v2/";
 export let theAppToken = "";
 export let theAuthorId = "";
 
@@ -182,12 +183,12 @@ export const createActionPost = (newPost, authorToken) => {
     });
 };
 
-export const deletePost = (theUser, postID, type, postsList) => {
-  let theDeleteURL = `${theAPIUrl}${type}/${postID}`;
+export const deletePost = (theUser, thePost, featureType) => {
+  let theDeleteURL = `${theAPIUrl}${thePost.type}/${thePost.id}`;
   return axios({
     url: theDeleteURL,
     method: "DELETE",
-    data: { id: postID, force: false },
+    data: { id: thePost.id, force: false },
     crossDomain: true,
     headers: {
       Authorization: `Bearer ${theUser.token}`
@@ -198,7 +199,7 @@ export const deletePost = (theUser, postID, type, postsList) => {
       currentPostsList.map((post, index) => {
         post.id === postID ? currentPostsList.splice(index, 1) : null;
       });
-      return currentPostsList;
+      return response;
     })
     .then(data => {
       return data;

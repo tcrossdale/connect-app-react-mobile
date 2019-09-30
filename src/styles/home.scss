@@ -22,6 +22,7 @@
     }
     .right {
       svg {
+        font-size: 1.3rem;
         &:hover {
           cursor: pointer;
         }
@@ -36,17 +37,20 @@
   flex-flow: column;
   .item {
     display: flex;
-    padding: 8px 5px;
+    padding: 12px 5px;
     border-bottom: 1px solid #cccccc52;
 
     .preview-icon {
       span {
         background: #cccccc52;
-        padding: 7px;
+        display: flex;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
         border-radius: 5px;
         align-items: center;
         svg {
-          font-size: 20px;
+          font-size: 24px;
         }
       }
       + .preview-content {
@@ -55,8 +59,9 @@
     }
     .preview-content {
       h5 {
-        font-size: 12px;
+        font-size: 15px;
         margin-bottom: 0;
+        font-weight: 500;
 
         + p {
           padding-top: 3px;

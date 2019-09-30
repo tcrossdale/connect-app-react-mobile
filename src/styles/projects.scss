@@ -1,3 +1,5 @@
+@import "./variables.scss";
+
 .projects-list {
   .inner {
     display: flex;
@@ -85,6 +87,89 @@
       }
       .bottom-panel {
         display: flex;
+      }
+    }
+  }
+}
+
+.profile-body-inner {
+  display: flex;
+  height: 100%;
+  flex-flow: column;
+  .upper {
+    background: #ccc;
+    height: 42%;
+    .edit-panel {
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+
+      span {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.45);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        transition: all 0.2s ease-in;
+        &:hover {
+          cursor: pointer;
+          background: rgba(0, 0, 0, 1);
+          color: $color-white;
+        }
+      }
+    }
+  }
+  .lower {
+    flex: 2;
+    .email {
+      display: flex;
+      padding: 10px 10px 0 10px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    ul {
+      li {
+        .inner {
+          display: flex;
+          padding: 0 10px;
+          transition: background 0.2s ease-in;
+
+          &:hover {
+            background: #f1f1f1;
+          }
+          .left {
+            padding: 10px 0;
+
+            div {
+              svg {
+              }
+              span {
+                padding-left: 6px;
+              }
+            }
+            &:hover {
+              cursor: pointer;
+            }
+          }
+          .right {
+          }
+        }
+      }
+    }
+  }
+}
+
+#project-detail-app-body {
+  .tab-content-wrapper {
+    height: 100%;
+    .tab-content {
+      height: 100%;
+      .tab-pane {
+        height: 100%;
       }
     }
   }

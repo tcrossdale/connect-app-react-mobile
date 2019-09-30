@@ -58,6 +58,8 @@ import {
   faPlusCircle,
   faPlusSquare,
   faSearch,
+  faShare,
+  faShareAlt,
   faSort,
   faStickyNote,
   faTasks,
@@ -127,6 +129,8 @@ library.add(
   faPlusSquare,
   faPencilAlt,
   faSearch,
+  faShare,
+  faShareAlt,
   faSort,
   faStickyNote,
   faTasks,
@@ -143,13 +147,12 @@ library.add(
   faUserFriends
 );
 import * as serviceWorker from "./serviceWorker";
-import { setUserAppData } from "./actions/index";
+import { setUserAppData, fetchUserAppData } from "./actions/index";
 import App from "./App";
 
 class AppRouter extends Component {
   state = {
     isLoggedIn: false,
-    isLoggedInCheck: true,
     appRouteContext: null,
     currentUser: null
   };
@@ -192,20 +195,39 @@ class AppRouter extends Component {
     return isOverLimit;
   };
 
+  isLoggedInCheck = () => {
+    let isLoggedIn = localStorage.getItem("isLoggedIn")
+      ? localStorage.getItem("isLoggedIn")
+      : null;
+    if (!isLoggedIn) {
+      if (window.location.pathname !== "/") {
+        this.setState({ isLoggedIn: false });
+        window.location.pathname = "/";
+        return;
+      }
+    }
+  };
+
   userStallCheck = theState => {
     let isOverIdletime = this.isOverIdletime();
     let thePathname = window.location.pathname;
     if (isOverIdletime) {
       if (thePathname !== "/") {
         this.logoutUser(theState);
-        return false;
+        return;
       }
     }
   };
 
   setRouteTimeStamp = () => {
-    let currentTime = new Date();
-    localStorage.setItem("routeTimeStamp", currentTime);
+    let isLoggedIn = localStorage.getItem("isLoggedIn")
+      ? localStorage.getItem("isLoggedIn")
+      : null;
+    if (isLoggedIn) {
+      let currentTime = new Date();
+      localStorage.setItem("routeTimeStamp", currentTime);
+      return;
+    }
   };
 
   setappRouteContent = (history, theNewState) => {
@@ -223,6 +245,9 @@ class AppRouter extends Component {
   };
 
   setTheUserAppData = currentUser => {
+    this.setState({
+      isLoading: true
+    });
     const setAppDataPromise = new Promise((resolve, reject) => {
       fetchUserAppData(currentUser).then(response => {
         this.setState({
@@ -230,7 +255,7 @@ class AppRouter extends Component {
           ...response
         });
         let theAppData = JSON.stringify(response);
-        let theUserData = JSON.stringify(newAppData.currentUser);
+        let theUserData = JSON.stringify(currentUser);
 
         localStorage.getItem("logoutTime") &&
           localStorage.removeItem("logoutTime");
@@ -239,6 +264,9 @@ class AppRouter extends Component {
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem("appData", theAppData);
         localStorage.setItem("currentUser", theUserData);
+        this.setState({
+          isLoading: false
+        });
         console.log("App Data Updated && LocalStorage Set!!");
       });
       resolve(true);
@@ -256,13 +284,26 @@ class AppRouter extends Component {
     let appData = localStorage.getItem("appData")
       ? localStorage.getItem("appData")
       : null;
+    let currentUser = localStorage.getItem("currentUser")
+      ? localStorage.getItem("currentUser")
+      : null;
 
-    if (appData) {
-      appData = JSON.parse(appData);
-      this.setState({
+    if (currentUser) {
+      currentUser = JSON.parse(appData);
+      this.setTheUserAppData(currentUser).then(responseData => {
+        console.log("setAppRouteMountCachedAppData - ", responseData);
+        /*
+        this.setState({
         ...this.state,
-        ...appData
+        ...responseData
+        });
+        */
       });
+
+      // this.setState({
+      //   ...this.state,
+      //   ...appData
+      // });
     }
   };
 
@@ -341,6 +382,7 @@ class AppRouter extends Component {
         setUserLoggedIn={this.setUserLoggedIn}
         userStallCheck={this.userStallCheck}
         setRouteTimeStamp={this.setRouteTimeStamp}
+        isLoggedInCheck={this.isLoggedInCheck}
         setAppRouteMountCachedAppData={this.setAppRouteMountCachedAppData}
       />
     );

@@ -126,6 +126,9 @@ form {
     }
   }
 }
+svg {
+  font-size: 1.4rem;
+}
 @keyframes lds-roller {
   0% {
     transform: rotate(0deg);
@@ -134,6 +137,12 @@ form {
   100% {
     transform: rotate(360deg);
   }
+}
+.show {
+  display: block;
+}
+.hide {
+  display: none;
 }
 
 .app {
@@ -219,6 +228,10 @@ form {
         color: $color-black;
         z-index: 10;
       }
+      svg {
+        font-size: 1.4rem;
+        min-width: 30px;
+      }
     }
     .app-header-bottom {
       background: $color-black;
@@ -231,9 +244,11 @@ form {
 
       ul {
         li {
-          padding: 7px 15px 7px 15px;
+          padding: 10px 15px 10px 15px;
           background: $color-white;
           border-bottom: 1px solid #ccc;
+          display: flex;
+          align-items: center;
           &:hover {
             cursor: pointer;
           }
@@ -244,6 +259,14 @@ form {
             svg {
               color: $color-white;
             }
+          }
+          svg {
+            font-size: 1.4rem;
+            min-width: 30px;
+          }
+          span {
+            font-size: 1.2rem;
+            padding-left: 2px;
           }
         }
       }
@@ -284,7 +307,7 @@ form {
   }
   .app-body {
     height: 100%;
-    padding: 60px 0 55px 0;
+    padding: 60px 0 80px 0;
     .app-body-inner {
       height: 100%;
       overflow-y: scroll;
@@ -302,7 +325,7 @@ form {
       text-align: center;
       background: #000;
       width: 25%;
-      padding: 5px 0;
+      padding: 15px 0 20px 0;
       color: #fff;
       text-decoration: none;
 
@@ -318,6 +341,7 @@ form {
       }
       svg {
         margin: 0 auto;
+        font-size: 16px;
       }
       span {
         display: block;
@@ -383,13 +407,25 @@ form {
   }
 }
 
+.empty-list-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+
+  h4 {
+    font-size: 2rem;
+  }
+}
+
 .tab-pane .react-calendar {
   width: 100%;
 }
 
 .create-button-wrapper {
   position: fixed;
-  bottom: 65px;
+  bottom: 90px;
   right: 23px;
 
   .create-button {

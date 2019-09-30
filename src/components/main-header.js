@@ -24,27 +24,49 @@ const Header = props => {
   centerHeaderList ? (theAppHeaderClass += " has-app-header-bottom") : null;
 
   const LeftInnerHeader = props => {
-    return (
-      <div className="header-left">
-        {props.currentHeader && props.currentHeader.leftheader ? (
-          props.currentHeader.leftheader.map((item, index) => (
-            <FontAwesomeIcon key={index} icon={item.icon} />
-          ))
-        ) : (
-          <img
-            onClick={() => props.toggleMainModal()}
-            className="avatar"
-            src={
-              props.appData &&
-              props.appData.currentUser &&
-              props.appData.currentUser.avatar_urls
-                ? props.appData.currentUser.avatar_urls["24"]
-                : "https://via.placeholder.com/24"
-            }
-          />
-        )}
-      </div>
+    let theHTML = null;
+    let profileImage = (
+      <img
+        onClick={() => props.toggleMainModal()}
+        className="avatar"
+        src={
+          props.appData &&
+          props.appData.currentUser &&
+          props.appData.currentUser.avatar_urls
+            ? props.appData.currentUser.avatar_urls["24"]
+            : "https://via.placeholder.com/24"
+        }
+      />
     );
+    if (props.currentHeader && props.currentHeader.leftheader === "back") {
+      theHTML = (
+        <FontAwesomeIcon
+          onClick={() => props.history.goBack()}
+          icon="angle-left"
+        />
+      );
+    } else if (props.currentHeader && props.currentHeader.leftheader) {
+      props.currentHeader.leftheader.map(
+        (item, index) =>
+          (theHTML += <FontAwesomeIcon key={index} icon={item.icon} />)
+      );
+    } else {
+      theHTML = (
+        <img
+          onClick={() => props.toggleMainModal()}
+          className="avatar"
+          src={
+            props.appData &&
+            props.appData.currentUser &&
+            props.appData.currentUser.avatar_urls
+              ? props.appData.currentUser.avatar_urls["24"]
+              : "https://via.placeholder.com/24"
+          }
+        />
+      );
+    }
+
+    return <div className="header-left">{theHTML}</div>;
   };
 
   const CenterInnerHeader = props => {

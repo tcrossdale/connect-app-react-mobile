@@ -1,0 +1,22 @@
+{
+  "short_name": "Connect",
+  "name": "CTC App",
+  "icons": [
+    {
+      "src": "/assets/images/icons/icon_x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/assets/images/icons/icon_x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#3367D6",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#3367D6",
+  "orientation": "portrait"
+}
