@@ -4,6 +4,12 @@ html,
 body {
   height: 100%;
 }
+a {
+  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+  }
+}
 .root {
   height: 100%;
   background: #fafafa;
@@ -42,6 +48,9 @@ form {
     border-radius: 0;
     width: 100%;
   }
+}
+.custom-switch .custom-control-label {
+  cursor: pointer;
 }
 .loader {
   display: flex;
@@ -182,6 +191,8 @@ svg {
         left: 15px;
         color: $color-black;
         z-index: 10;
+        height: 100%;
+        align-items: center;
         .avatar {
           border-radius: 50%;
           width: 40px;
@@ -195,8 +206,9 @@ svg {
         flex-flow: column;
         align-items: center;
         justify-content: center;
-        background: #f1f1f1;
-        border-bottom: 1px solid #999;
+        background: #ffffff;
+        border-bottom: 1px solid #f6f6f6;
+        box-shadow: 1px 2px 2px #dad7d7;
         width: 100%;
         height: 60px;
         .header-center-top {
@@ -311,10 +323,11 @@ svg {
     .app-body-inner {
       height: 100%;
       overflow-y: scroll;
+      background-color: $color-app-body-inner;
     }
   }
   .app-footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -413,7 +426,12 @@ svg {
   justify-content: center;
   text-align: center;
   height: 100%;
+  flex-flow: column;
 
+  svg {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+  }
   h4 {
     font-size: 2rem;
   }

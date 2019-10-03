@@ -8,7 +8,6 @@ import {
   RegisterScreen
 } from "./containers/Access";
 import Tasks, {
-  TaskDetail,
   diff_minutes,
   getDaysAhead,
   diff_minutes_display,
@@ -16,6 +15,7 @@ import Tasks, {
   setTheDaysAheadList,
   getFilterAfterDateList
 } from "./containers/Tasks";
+import TaskDetail from "./containers/TaskDetail";
 import Inbox from "./containers/Inbox";
 import { Projects, ProjectDetail } from "./containers/Projects";
 import { Home } from "./containers/Home";
@@ -773,7 +773,6 @@ class App extends Component {
                 filterAfterDateList={
                   this.state && this.state.filterAfterDateList
                 }
-                taskEditItem={this.state.taskEditItem}
                 theDaysAfter={this.state && this.state.theDaysAfter}
                 setTheDaysAheadList={this.setTheDaysAheadList}
                 changeFilterType={this.changeFilterType}
@@ -782,6 +781,8 @@ class App extends Component {
                 toggleMainModal={this.toggleMainModal}
                 taskFilterList={this.state && this.state.taskFilterList}
                 toggleTaskStatus={this.toggleTaskStatus}
+                deleteItemBootbox={this.deleteItemBootbox}
+                updateAppItem={this.updateAppItem}
               />
             )}
           />

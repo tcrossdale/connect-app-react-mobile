@@ -11,6 +11,7 @@ import {
   FormGroup,
   FormText,
   Label,
+  CustomInput,
   Input,
   Button,
   TabContent,
@@ -265,6 +266,7 @@ export class Projects extends Component {
 export class ProjectDetail extends Component {
   state = {
     activeTab: this.props.activeProjectDetailTab,
+    convoModalIsOpen: true,
     filterTypeView: "projects",
     headerData: [
       {
@@ -299,7 +301,7 @@ export class ProjectDetail extends Component {
             {
               icon: "comments",
               action: this.props.changeProjectDetailView,
-              viewchange: "coversations-view",
+              viewchange: "conversations-view",
               label: "Conversations"
             },
             {
@@ -343,6 +345,12 @@ export class ProjectDetail extends Component {
     });
   };
 
+  toggleConvoModal = () => {
+    this.setState({
+      convoModalIsOpen: !this.state.convoModalIsOpen
+    });
+  };
+
   componentDidMount = () => {
     if (this.props.appData.projects) {
       let theProjID = parseInt(
@@ -362,9 +370,7 @@ export class ProjectDetail extends Component {
     }
   };
 
-  componentDidUpdate = () => {
-    console.log("Project Update State - ", this.state);
-  };
+  componentDidUpdate = () => {};
 
   render() {
     return (
@@ -417,7 +423,55 @@ export class ProjectDetail extends Component {
                   <h4>Board View</h4>
                 </TabPane>
                 <TabPane tabId="conversations-view">
-                  <h4>Conversations View</h4>
+                  <div className="empty-list-panel">
+                    <FontAwesomeIcon icon="comments" />
+                    <h4>Start a conversation</h4>
+                    <p>
+                      Post an update, kickoff a project, or brainstorm ideas
+                    </p>
+                  </div>
+                  <Modal
+                    isOpen={this.state.convoModalIsOpen}
+                    toggle={this.toggleConvoModal}
+                    id="project-convo-modal"
+                  >
+                    <ModalHeader toggle={this.toggleConvoModal}>
+                      <span onClick={() => this.toggleConvoModal()}>
+                        Cancel
+                      </span>
+                      <span>New Conversation</span>
+                    </ModalHeader>
+                    <ModalBody>
+                      <FormGroup>
+                        <span>Status Update</span>{" "}
+                        <CustomInput
+                          type="switch"
+                          id="exampleCustomSwitch"
+                          name="customSwitch"
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <Input type="text" placeholder="Subject" />
+                      </FormGroup>
+                      <FormGroup>
+                        <Input
+                          type="textarea"
+                          placeholder="Start a conversation..."
+                        />
+                      </FormGroup>
+                    </ModalBody>
+                    <ModalFooter>
+                      <div className="left">
+                        <FontAwesomeIcon icon="comments" />
+                        <FontAwesomeIcon icon="paperclip" />
+                      </div>
+                      <div className="right">
+                        <Button className="primary">
+                          <FontAwesomeIcon icon="paper-plane" /> Post
+                        </Button>
+                      </div>
+                    </ModalFooter>
+                  </Modal>
                 </TabPane>
               </TabContent>
             </div>

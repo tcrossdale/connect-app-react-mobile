@@ -5,7 +5,16 @@ import Calendar from "react-calendar";
 import Header, { getHeaderType } from "../components/main-header";
 import Footer from "../components/main-footer";
 import { Preloader } from "../components/preloader-container";
-import { Input, Label, TabContent, TabPane } from "reactstrap";
+import {
+  Input,
+  Label,
+  TabContent,
+  TabPane,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  ModalFooter
+} from "reactstrap";
 import "../styles/tasks.scss";
 
 export let theCurrentDateTime = new Date();
@@ -500,214 +509,6 @@ class Tasks extends Component {
                   />
                 </TabPane>
               </TabContent>
-            </div>
-          </div>
-        </main>
-        <Footer
-          urlParam={this.props.match && this.props.match}
-          appData={this.props.appData && this.props.appData}
-        />
-      </div>
-    );
-  }
-}
-
-export class TaskDetail extends Component {
-  state = {
-    actionModalIsOpen: true,
-    taskItem: this.props.taskEditItem ? this.props.taskEditItem : {},
-    filterType: "tasks",
-    filterTypeView: "all",
-    headerData: [
-      {
-        type: "tasks",
-        centerheader: {
-          type: "list",
-          title: "My Tasks",
-          subtitle: "List",
-          list: [
-            {
-              icon: "list",
-              action: this.props.changeTheView,
-              label: "List",
-              viewchange: "list-vew"
-            },
-            {
-              icon: "calendar",
-              action: this.props.changeTheView,
-              label: "Calendar",
-              viewchange: "calendar-view"
-            }
-          ]
-        },
-        rightheader: [
-          {
-            type: "icon",
-            icon: "check",
-            action: this.props.toggleTaskStatus,
-            filterModalLink: true
-          },
-          {
-            type: "icon",
-            icon: "thumbs-up",
-            action: this.props.toggleActionModal,
-            filterModalLink: true
-          },
-          {
-            type: "icon",
-            icon: "filter",
-            action: this.props.toggleActionModal,
-            filterModalLink: true
-          }
-        ],
-        actionsModalItems: {
-          listType: "tasks",
-          listItems: [
-            {
-              label: "Incomplete Tasks",
-              filterTypeView: "open",
-              action: this.props.changeFilterType
-            },
-            {
-              label: "Complete Tasks",
-              filterTypeView: "resolved",
-              action: this.props.changeFilterType
-            },
-            {
-              label: "All Tasks",
-              filterTypeView: "all",
-              action: this.props.changeFilterType
-            },
-            {
-              label: "Sort",
-              action: null,
-              filterTypeView: "date",
-              rightIcon: "angle-right"
-            }
-          ]
-        }
-      }
-    ],
-    taskItem: {}
-  };
-
-  constructor(props) {
-    super(props);
-    this.props = props;
-  }
-
-  getHeaderType = (theType, theHeaderData) => {
-    let theIndex = theHeaderData.findIndex((item, index) => {
-      return item.type === theType;
-    });
-    let theHeader = null;
-    if (theIndex !== -1) {
-      theHeader = this.state.headerData[theIndex]
-        ? this.state.headerData[theIndex]
-        : null;
-    }
-
-    return theHeader;
-  };
-
-  onInputChange = () => {};
-
-  componentDidMount = () => {
-    console.log("The Task Detail Props", this.props);
-    let theTaskID = parseInt(this.props.match.params.id);
-    let theTaskIndex =
-      this.props.appData &&
-      this.props.appData.tasks &&
-      this.props.appData.tasks.findIndex((task, index) => {
-        return task.id === theTaskID;
-      });
-
-    if (theTaskIndex !== -1) {
-      let tempState = { ...this.state };
-      let taskAssigneeID = this.props.appData.tasks[theTaskIndex].assigneeid;
-      let theUser = null;
-      if (taskAssigneeID) {
-        let theUserIndex = this.props.appData.users.findIndex(user => {
-          return user.id === taskAssigneeID;
-        });
-        if (theUserIndex !== -1) {
-          theUser = this.props.appData.users[theUserIndex];
-        }
-      }
-      tempState["taskItem"] = { ...this.props.appData.tasks[theTaskIndex] };
-      if (theUser) {
-        tempState["taskItem"]["theAssignee"] = theUser;
-      }
-      this.setState({ taskItem: { ...tempState } });
-      console.log("The Task Detail Item", this.state.taskItem);
-    }
-  };
-
-  render() {
-    return (
-      <div className="app-container">
-        <Header
-          headerData={this.state.headerData}
-          appData={this.props.appData && this.props.appData}
-          toggleMainModal={this.props.toggleMainModal}
-          theHeader={getHeaderType("tasks", this.state.headerData)}
-          changeFilterType={this.props.changeFilterType}
-          toggleTaskStatus={this.props.toggleTaskStatus}
-        />
-        <main className="app-body">
-          <div className="app-body-inner">
-            <div className="task-detail-wrap">
-              <div className="task-header">
-                <h3>
-                  {this.state &&
-                    this.state.taskItem &&
-                    this.state.taskItem.post_title}
-                </h3>
-
-                <div className="task-header-inner">
-                  <div className="task-assignees">
-                    <div>
-                      <span></span>
-                    </div>
-                    <div>
-                      {this.state &&
-                      this.state.taskItem &&
-                      this.state.taskItem.theAssignee ? (
-                        <Fragment>
-                          <span>Assigned to</span>
-                          <span>{this.state.taskItem.theAssignee.name}</span>
-                        </Fragment>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </div>
-                  <div className="task-date">
-                    <FontAwesomeIcon icon="calendar-alt" />
-                    <div>
-                      <span>Due Date</span>
-                      <span>Sep 1</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="task-description">
-                <Label>Description</Label>
-                <Input
-                  type="textarea"
-                  name="content"
-                  onChange={this.onInputChange}
-                  value={
-                    this.state &&
-                    this.state.taskItem &&
-                    this.state.taskItem.content &&
-                    this.state.taskItem.content.rendered
-                      ? this.state.taskItem.content.rendered
-                      : ""
-                  }
-                />
-              </div>
             </div>
           </div>
         </main>
